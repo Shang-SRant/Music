@@ -67,6 +67,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
         Button btnPlay = getView().findViewById(R.id.btnPlay);
         Button btnLast = getView().findViewById(R.id.btnLast);
