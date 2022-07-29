@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/drawable/pause.xml" value="0.3245" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/drawable/play.xml" value="0.3245" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/drawable/record.xml" value="0.2675" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout-land/fragment_home.xml" value="0.5" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/fragment_home.xml" value="0.24739583333333334" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/fragment_hot.xml" value="0.25" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/fragment_mine.xml" value="0.24739583333333334" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/item.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/layout/layout.xml" value="0.34739583333333335" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/menu/item_nav.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/tianqi.shang/AndroidStudioProjects/Music/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.363" />
+        <entry key="..\:/Users/tianqi.shang/Desktop/Music/app/src/main/res/layout/activity_main.xml" value="0.3546195652173913" />
+        <entry key="..\:/Users/tianqi.shang/Desktop/Music/app/src/main/res/layout/fragment_home.xml" value="0.3546195652173913" />
+        <entry key="..\:/Users/tianqi.shang/Desktop/Music/app/src/main/res/layout/fragment_hot.xml" value="0.3546195652173913" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/nav_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/hot"
+        android:icon="@drawable/nav_hot"
+        android:title="热门" />
+    <item
+        android:id="@+id/mine"
+        android:icon="@drawable/nav_mine"
+        android:title="我的" />
+</menu>
