@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.stq.music.R;
 import com.stq.music.data.GlobalVariable;
 import com.stq.music.entity.Song;
+import com.stq.music.utils.ToastUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,7 +136,8 @@ public class HomeFragment extends Fragment {
                     if (GlobalVariable.position > 0) {
                         GlobalVariable.position--;
                     } else {
-                        Toast.makeText(getActivity(), "已经是第一个啦！", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "已经是第一个啦！", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showToast(getActivity(), "已经是第一个啦！");
                     }
 
                     song = GlobalVariable.songs.get(GlobalVariable.position);
@@ -160,7 +162,7 @@ public class HomeFragment extends Fragment {
                     if (GlobalVariable.position < GlobalVariable.songs.size() - 1) {
                         GlobalVariable.position++;
                     } else {
-                        Toast.makeText(getActivity(), "已经是最后一个啦！", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showToast(getActivity(), "已经是最后一个啦！");
                     }
 
                     song = GlobalVariable.songs.get(GlobalVariable.position);

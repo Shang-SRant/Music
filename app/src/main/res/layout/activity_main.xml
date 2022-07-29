@@ -25,5 +25,4 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/item_nav" />
 
-
 </RelativeLayout>
