@@ -48,6 +48,9 @@ public class HomeFragment extends Fragment {
     private static SeekBar progressSeekBar;
     ImageView imageView;
     Animation mAnimation;
+    public TextView startTime;
+    private int pause_progress;
+    TextView endTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,108 +76,127 @@ public class HomeFragment extends Fragment {
         Button btnLast = getView().findViewById(R.id.btnLast);
         Button btnNext = getView().findViewById(R.id.btnNext);
         TextView title = getView().findViewById(R.id.title);
-        imageView = getView().findViewById(R.id.imageView);
+        startTime = getView().findViewById(R.id.startTime);
+        endTime = getView().findViewById(R.id.endTime);
 
-        song = GlobalVariable.songs.get(GlobalVariable.position);
-        try {
-            GlobalVariable.mediaPlayer.reset();
-            GlobalVariable.mediaPlayer.setDataSource(song.getPath());
-            GlobalVariable.mediaPlayer.prepare();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         //动画
         mAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotaterepeat);
         LinearInterpolator interpolator = new LinearInterpolator();
         mAnimation.setInterpolator(interpolator);
 
-        if (song != null) {
-            title.setText("当前音乐：" + song.getSong());
-        }
-
-        if (GlobalVariable.runningNow == true) {
-            song = GlobalVariable.songs.get(GlobalVariable.position);
-            GlobalVariable.mediaPlayer.start();
+        imageView = getView().findViewById(R.id.imageView);
+        song = GlobalVariable.songs.get(GlobalVariable.position);
+        if (mediaPlayer.isPlaying() && pause_progress != 0 && !GlobalVariable.runningNow) {
+            mediaPlayer.seekTo(pause_progress);
+            mediaPlayer.start();
+            imageView.startAnimation(mAnimation);
+            int duration = mediaPlayer.getDuration() / 1000;
+            long minute = duration / 60;
+            long second = duration % 60;
+            endTime.setText(String.format("%02d:%02d", minute, second));
+            Thread thread = new Thread(new SeekBarThread());
+            // 启动更新seekBar线程
+            thread.start();
+            pause_progress = 0;
+        } else {
             try {
                 GlobalVariable.mediaPlayer.reset();
                 GlobalVariable.mediaPlayer.setDataSource(song.getPath());
                 GlobalVariable.mediaPlayer.prepare();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            playMusic();
-            GlobalVariable.runningNow = false;
+
+
+            if (song != null) {
+                title.setText("当前音乐：" + song.getSong());
+            }
+
+            if (GlobalVariable.runningNow == true) {
+                song = GlobalVariable.songs.get(GlobalVariable.position);
+                try {
+                    GlobalVariable.mediaPlayer.reset();
+                    GlobalVariable.mediaPlayer.setDataSource(song.getPath());
+                    GlobalVariable.mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                playMusic();
+                GlobalVariable.runningNow = false;
+            }
+
+            //上一首
+            btnLast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //判断是不是第一个
+                    if (GlobalVariable.position > 0) {
+                        GlobalVariable.position--;
+                    } else {
+                        Toast.makeText(getActivity(), "已经是第一个啦！", Toast.LENGTH_SHORT).show();
+                    }
+
+                    song = GlobalVariable.songs.get(GlobalVariable.position);
+                    title.setText("当前音乐：" + song.getSong());
+                    try {
+                        GlobalVariable.mediaPlayer.reset();
+                        GlobalVariable.mediaPlayer.setDataSource(song.getPath());
+                        GlobalVariable.mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    playMusic();
+                }
+            });
+
+            //下一首
+            btnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //判断是不是最后一个
+                    if (GlobalVariable.position < GlobalVariable.songs.size() - 1) {
+                        GlobalVariable.position++;
+                    } else {
+                        Toast.makeText(getActivity(), "已经是最后一个啦！", Toast.LENGTH_SHORT).show();
+                    }
+
+                    song = GlobalVariable.songs.get(GlobalVariable.position);
+                    title.setText("当前音乐：" + song.getSong());
+                    try {
+                        GlobalVariable.mediaPlayer.reset();
+                        GlobalVariable.mediaPlayer.setDataSource(song.getPath());
+                        GlobalVariable.mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    playMusic();
+                }
+            });
+
+            // 暂停/播放
+            btnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playMusic();
+                }
+            });
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playMusic();
+                }
+            });
         }
 
-        //上一首
-        btnLast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        // 更新seekBar线程
 
-                //判断是不是第一个
-                if (GlobalVariable.position > 0) {
-                    GlobalVariable.position--;
-                } else {
-                    Toast.makeText(getActivity(), "已经是第一个啦！", Toast.LENGTH_SHORT).show();
-                }
-
-                song = GlobalVariable.songs.get(GlobalVariable.position);
-                title.setText("当前音乐：" + song.getSong());
-                try {
-                    GlobalVariable.mediaPlayer.reset();
-                    GlobalVariable.mediaPlayer.setDataSource(song.getPath());
-                    GlobalVariable.mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                playMusic();
-            }
-        });
-
-        //下一首
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //判断是不是最后一个
-                if (GlobalVariable.position < GlobalVariable.songs.size() - 1) {
-                    GlobalVariable.position++;
-                } else {
-                    Toast.makeText(getActivity(), "已经是最后一个啦！", Toast.LENGTH_SHORT).show();
-                }
-
-                song = GlobalVariable.songs.get(GlobalVariable.position);
-                title.setText("当前音乐：" + song.getSong());
-                try {
-                    GlobalVariable.mediaPlayer.reset();
-                    GlobalVariable.mediaPlayer.setDataSource(song.getPath());
-                    GlobalVariable.mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                playMusic();
-            }
-        });
-
-        // 暂停/播放
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playMusic();
-            }
-        });
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playMusic();
-            }
-        });
     }
 
-    // 更新seekBar线程
-    static class SeekBarThread implements Runnable {
+    class SeekBarThread implements Runnable {
         @Override
         public void run() {
             while (mediaPlayer.isPlaying()) {
@@ -183,9 +205,15 @@ public class HomeFragment extends Fragment {
                 long second = duration % 60;
                 // 将SeekBar位置设置到当前播放位置
                 progressSeekBar.setProgress(duration);
+                startTime.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startTime.setText(String.format("%02d:%02d", minute, second));
+                    }
+                });
                 try {
                     // 每100毫秒更新一次位置
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                     //播放进度
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -199,7 +227,6 @@ public class HomeFragment extends Fragment {
             mediaPlayer.pause();
             imageView.clearAnimation();
         } else {
-            TextView endTime = getView().findViewById(R.id.endTime);
             progressSeekBar = getView().findViewById(R.id.progressSeekBar);
 
             int duration = mediaPlayer.getDuration() / 1000;
@@ -216,7 +243,8 @@ public class HomeFragment extends Fragment {
                         mediaPlayer.seekTo(progress * 1000);
                     }
 
-                    if (progress == progressSeekBar.getMax()) {
+                    if (progress >= progressSeekBar.getMax()) {
+                        seekBar.setProgress(0);
                         imageView.clearAnimation();
                     }
                 }
@@ -242,5 +270,11 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mediaPlayer.isPlaying()) {
+            pause_progress = mediaPlayer.getCurrentPosition();
+        }
+    }
 }

@@ -63,4 +63,20 @@ public class HotFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();Log.d("HotFragment: ", "onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();Log.d("HotFragment: ", "onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("HotFragment: ", "onDestroy");
+    }
 }
