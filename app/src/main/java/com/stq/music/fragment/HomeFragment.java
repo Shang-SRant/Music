@@ -46,6 +46,8 @@ public class HomeFragment extends Fragment {
     private static final MediaPlayer mediaPlayer = GlobalVariable.mediaPlayer;
     private static Song song = GlobalVariable.songs.get(GlobalVariable.position);
     private static SeekBar progressSeekBar;
+    ImageView imageView;
+    Animation mAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class HomeFragment extends Fragment {
         Button btnLast = getView().findViewById(R.id.btnLast);
         Button btnNext = getView().findViewById(R.id.btnNext);
         TextView title = getView().findViewById(R.id.title);
-        ImageView imageView = getView().findViewById(R.id.imageView);
+        imageView = getView().findViewById(R.id.imageView);
 
         song = GlobalVariable.songs.get(GlobalVariable.position);
         try {
@@ -82,7 +84,7 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
         //动画
-        Animation mAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotaterepeat);
+        mAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotaterepeat);
         LinearInterpolator interpolator = new LinearInterpolator();
         mAnimation.setInterpolator(interpolator);
 
@@ -97,54 +99,10 @@ public class HomeFragment extends Fragment {
                 GlobalVariable.mediaPlayer.reset();
                 GlobalVariable.mediaPlayer.setDataSource(song.getPath());
                 GlobalVariable.mediaPlayer.prepare();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.pause();
-                imageView.clearAnimation();
-            } else {
-                TextView endTime = getView().findViewById(R.id.endTime);
-                progressSeekBar = getView().findViewById(R.id.progressSeekBar);
-
-                int duration = mediaPlayer.getDuration() / 1000;
-                long minute = duration / 60;
-                long second = duration % 60;
-
-                progressSeekBar.setMax(duration);
-
-                progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        //进度条拖动时改编歌曲的时间
-                        if (fromUser) {
-                            mediaPlayer.seekTo(progress * 1000);
-                        }
-
-                        if (progress == progressSeekBar.getMax()) {
-                            imageView.clearAnimation();
-                        }
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-
-                endTime.setText(String.format("%02d:%02d", minute, second));
-                mediaPlayer.start();
-                Thread thread = new Thread(new SeekBarThread());
-                // 启动线程
-                thread.start();
-                imageView.startAnimation(mAnimation);
-            }
+            playMusic();
             GlobalVariable.runningNow = false;
         }
 
@@ -166,54 +124,10 @@ public class HomeFragment extends Fragment {
                     GlobalVariable.mediaPlayer.reset();
                     GlobalVariable.mediaPlayer.setDataSource(song.getPath());
                     GlobalVariable.mediaPlayer.prepare();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    imageView.clearAnimation();
-                } else {
-                    TextView endTime = getView().findViewById(R.id.endTime);
-                    progressSeekBar = getView().findViewById(R.id.progressSeekBar);
-
-                    int duration = mediaPlayer.getDuration() / 1000;
-                    long minute = duration / 60;
-                    long second = duration % 60;
-
-                    progressSeekBar.setMax(duration);
-
-                    progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            //进度条拖动时改编歌曲的时间
-                            if (fromUser) {
-                                mediaPlayer.seekTo(progress * 1000);
-                            }
-
-                            if (progress == progressSeekBar.getMax()) {
-                                imageView.clearAnimation();
-                            }
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        }
-                    });
-
-                    endTime.setText(String.format("%02d:%02d", minute, second));
-                    mediaPlayer.start();
-                    Thread thread = new Thread(new SeekBarThread());
-                    // 启动线程
-                    thread.start();
-                    imageView.startAnimation(mAnimation);
-                }
+                playMusic();
             }
         });
 
@@ -235,54 +149,10 @@ public class HomeFragment extends Fragment {
                     GlobalVariable.mediaPlayer.reset();
                     GlobalVariable.mediaPlayer.setDataSource(song.getPath());
                     GlobalVariable.mediaPlayer.prepare();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    imageView.clearAnimation();
-                } else {
-                    TextView endTime = getView().findViewById(R.id.endTime);
-                    progressSeekBar = getView().findViewById(R.id.progressSeekBar);
-
-                    int duration = mediaPlayer.getDuration() / 1000;
-                    long minute = duration / 60;
-                    long second = duration % 60;
-
-                    progressSeekBar.setMax(duration);
-
-                    progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            //进度条拖动时改编歌曲的时间
-                            if (fromUser) {
-                                mediaPlayer.seekTo(progress * 1000);
-                            }
-
-                            if (progress == progressSeekBar.getMax()) {
-                                imageView.clearAnimation();
-                            }
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        }
-                    });
-
-                    endTime.setText(String.format("%02d:%02d", minute, second));
-                    mediaPlayer.start();
-                    Thread thread = new Thread(new SeekBarThread());
-                    // 启动线程
-                    thread.start();
-                    imageView.startAnimation(mAnimation);
-                }
+                playMusic();
             }
         });
 
@@ -290,102 +160,14 @@ public class HomeFragment extends Fragment {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    imageView.clearAnimation();
-                } else {
-                    TextView endTime = getView().findViewById(R.id.endTime);
-                    progressSeekBar = getView().findViewById(R.id.progressSeekBar);
-
-                    int duration = mediaPlayer.getDuration() / 1000;
-                    long minute = duration / 60;
-                    long second = duration % 60;
-
-                    progressSeekBar.setMax(duration);
-
-                    progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            //进度条拖动时改编歌曲的时间
-                            if (fromUser) {
-                                mediaPlayer.seekTo(progress * 1000);
-                            }
-
-                            if (progress == progressSeekBar.getMax()) {
-                                imageView.clearAnimation();
-                            }
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        }
-                    });
-
-                    endTime.setText(String.format("%02d:%02d", minute, second));
-
-                    mediaPlayer.start();
-                    Thread thread = new Thread(new SeekBarThread());
-                    // 启动更新seekBar线程
-                    thread.start();
-                    imageView.startAnimation(mAnimation);
-                }
+                playMusic();
             }
         });
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                    imageView.clearAnimation();
-                } else {
-                    TextView endTime = getView().findViewById(R.id.endTime);
-                    progressSeekBar = getView().findViewById(R.id.progressSeekBar);
-
-                    int duration = mediaPlayer.getDuration() / 1000;
-                    long minute = duration / 60;
-                    long second = duration % 60;
-
-                    progressSeekBar.setMax(duration);
-
-                    progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            //进度条拖动时改编歌曲的时间
-                            if (fromUser) {
-                                mediaPlayer.seekTo(progress * 1000);
-                            }
-
-                            if (progress == progressSeekBar.getMax()) {
-                                imageView.clearAnimation();
-                            }
-                        }
-
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        }
-                    });
-
-                    endTime.setText(String.format("%02d:%02d", minute, second));
-
-                    mediaPlayer.start();
-                    Thread thread = new Thread(new SeekBarThread());
-                    // 启动更新seekBar线程
-                    thread.start();
-                    imageView.startAnimation(mAnimation);
-                }
+                playMusic();
             }
         });
     }
@@ -408,6 +190,54 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void playMusic() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            imageView.clearAnimation();
+        } else {
+            TextView endTime = getView().findViewById(R.id.endTime);
+            progressSeekBar = getView().findViewById(R.id.progressSeekBar);
+
+            int duration = mediaPlayer.getDuration() / 1000;
+            long minute = duration / 60;
+            long second = duration % 60;
+
+            progressSeekBar.setMax(duration);
+
+            progressSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    //进度条拖动时改编歌曲的时间
+                    if (fromUser) {
+                        mediaPlayer.seekTo(progress * 1000);
+                    }
+
+                    if (progress == progressSeekBar.getMax()) {
+                        imageView.clearAnimation();
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            endTime.setText(String.format("%02d:%02d", minute, second));
+
+            mediaPlayer.start();
+            Thread thread = new Thread(new SeekBarThread());
+            // 启动更新seekBar线程
+            thread.start();
+            imageView.startAnimation(mAnimation);
         }
     }
 
