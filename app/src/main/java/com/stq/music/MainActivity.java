@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,11 +33,14 @@ import com.stq.music.fragment.MineFragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     ViewPager2 viewPager;
     public  ArrayList<Song> songs = GlobalVariable.songs;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPager);
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -78,9 +86,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         getSongsList();
         initPager();
     }
+
 
     private void initPager() {
         ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
@@ -94,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     //获取/storage/emulated/0/Music/文件夹下的所有音乐文件
     private void getSongsList() {
         File files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-        for (File file : files.listFiles()) {
+        for (File file : Objects.requireNonNull(files.listFiles())) {
             if (file.getName().endsWith(".mp3")) {
                 Song song = new Song(file.getName(), "佚名", file.getPath());
                 songs.add(song);

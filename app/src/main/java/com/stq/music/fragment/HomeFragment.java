@@ -5,6 +5,7 @@ import static android.os.Environment.getExternalStorageDirectory;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -52,6 +53,7 @@ public class HomeFragment extends Fragment {
     public TextView startTime;
     private int pause_progress;
     TextView endTime;
+    private AudioManager mgr;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,11 +67,6 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
 
         super.onResume();
@@ -79,6 +76,8 @@ public class HomeFragment extends Fragment {
         TextView title = getView().findViewById(R.id.title);
         startTime = getView().findViewById(R.id.startTime);
         endTime = getView().findViewById(R.id.endTime);
+        Button btn_adjustAdd = getView().findViewById(R.id.btn_adjustAdd);
+        Button btn_adjustReduce = getView().findViewById(R.id.btn_adjustReduce);
 
         //动画
         mAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.rotaterepeat);
@@ -192,7 +191,23 @@ public class HomeFragment extends Fragment {
             });
         }
 
+        //音量加
+        btn_adjustAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mgr = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                mgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+            }
+        });
 
+        //音量减
+        btn_adjustReduce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mgr = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                mgr.adjustStreamVolume(AudioManager.STREAM_MUSIC,AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+            }
+        });
 
     }
 
