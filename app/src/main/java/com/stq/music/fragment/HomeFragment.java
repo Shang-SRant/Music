@@ -131,12 +131,10 @@ public class HomeFragment extends Fragment {
             btnLast.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     //判断是不是第一个
                     if (GlobalVariable.position > 0) {
                         GlobalVariable.position--;
                     } else {
-                        //Toast.makeText(getActivity(), "已经是第一个啦！", Toast.LENGTH_SHORT).show();
                         ToastUtils.showToast(getActivity(), "已经是第一个啦！");
                     }
 
@@ -194,10 +192,11 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // 更新seekBar线程
+
 
     }
 
+    // 更新seekBar线程
     class SeekBarThread implements Runnable {
         @Override
         public void run() {
@@ -224,6 +223,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    //播放音乐
     public void playMusic() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();

@@ -38,6 +38,7 @@ public class MineFragment extends Fragment {
         ListView listView = getView().findViewById(R.id.listView);
         ArrayList<String> list = new ArrayList<String>();
         list.add("切换扫描目录");
+        list.add("只扫描大于多少字节的音乐文件");
         listView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

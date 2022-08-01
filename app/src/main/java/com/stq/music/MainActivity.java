@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Trace;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
             }
         });
+
         getSongsList();
         initPager();
     }
@@ -99,4 +101,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+
 }
